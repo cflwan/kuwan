@@ -25,7 +25,7 @@
               <div class="channel-item van-hairline--surround" >
                 {{item.name}}
                 <!-- 删除的徽标 -->
-                <van-badge color="transparent" class="cross-badge" v-show="isflag">
+                <van-badge color="transparent" class="cross-badge" v-show="isflag && item.id !== 0">
                   <template #content>
                     <van-icon
                       name="cross"
@@ -81,9 +81,11 @@ export default {
 
     deChannel (item) {
       if (this.isflag === true) {
-        this.$emit('removeChannnelEv', item)
+        if (item.id !== 0) {
+          this.$emit('removeChannnelEv', item)
+        }
       } else {
-        this.$emit('isShow')
+        this.$emit('close')
         this.$emit('input', item.id)
       }
     },

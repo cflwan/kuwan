@@ -5,30 +5,47 @@
     <template #title>
       <div class="title-box">
         <!-- 标题 -->
-        <span>{{tobj.title}}</span>
+        <span>{{ tobj.title }}</span>
         <!-- 单图图片放置 -->
-        <img class="thumb" v-if="tobj.cover.type===1" :src="tobj.cover.images[0]"/>
+        <img
+          class="thumb"
+          v-if="tobj.cover.type === 1"
+          :src="tobj.cover.images[0]"
+        />
       </div>
       <!-- 三图  判断大于一比较严谨-->
-      <div class="thumb-box" v-if="tobj.cover.type>1">
-        <img class="thumb" v-for="(imgUrl,index) in tobj.cover.images" :key="index" :src="imgUrl" alt="#">
-     </div>
-
+      <div class="thumb-box" v-if="tobj.cover.type > 1">
+        <img
+          class="thumb"
+          v-for="(imgUrl, index) in tobj.cover.images"
+          :key="index"
+          :src="imgUrl"
+          alt="#"
+        />
+      </div>
     </template>
     <!-- label 区域的插槽 -->
     <template #label>
       <div class="label-box">
         <div>
-          <span>{{tobj.aut_id}}</span>
-          <span>{{tobj.comm_count}}评论</span>
-          <span>{{formatTime(tobj.pubdate)}}</span>
+          <span>{{ tobj.aut_id }}</span>
+          <span>{{ tobj.comm_count }}评论</span>
+          <span>{{ formatTime(tobj.pubdate) }}</span>
         </div>
         <!-- 反馈按钮 -->
         <!-- @click="show = true 绑定点击事件，给show赋值true，然后反馈组件显示 -->
-        <van-icon name="cross" @click="show = true"/>
+        <van-icon name="cross" @click="show = true" />
       </div>
-      <!-- 下面是反馈组件   get-container="body" 把反馈组件遮罩挂载到body标签上，因为每个ceil里有 overflow：hidden反馈里有cancel-text="取消"-->
-      <van-action-sheet v-model="show" :actions="actions" @select="onSelect" get-container="body" :cancel-text="cancelText" @cancel="onCancel"/>
+      <!-- 下面是反馈组件   get-container="body" 把反馈组件遮罩挂载到body标签上，
+      因为每个ceil里有 overflow：hidden反馈里有cancel-text="取消"-->
+      <van-action-sheet
+        v-model="show"
+        :actions="actions"
+        @select="onSelect"
+        get-container="body"
+        :cancel-text="cancelText"
+        @cancel="onCancel"
+      />
     </template>
   </van-cell>
 </template>
@@ -51,13 +68,14 @@ export default {
   },
   methods: {
     formatTime: timeAgo, // timeAgo是一个方法,插件封装在utils
+    // 点击反馈面板上的文字，触发下面的方法
     onSelect (item, value) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
       // console.log(item)  反馈面板文字内容
       // console.log(value)   反馈面板索引
       if (item.name === '反馈垃圾内容') {
-      // actions 定义面板选项列表 ，下面的数据可以封装在函数里，用的时候调用
+        // actions 定义面板选项列表 ，下面的数据可以封装在函数里，用的时候调用
         this.actions = actionsDateB()
         this.cancelText = '返回'
         //  this.cancelText = '返回'  选项面板出现返回
@@ -73,6 +91,7 @@ export default {
     },
     onCancel () {
       if (this.cancelText === '返回') {
+        //  actionsDateA() 一级反馈面板，出现面板
         this.actions = actionsDateA()
         // this.show = true
 
@@ -82,7 +101,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped lang="less">
@@ -101,11 +119,11 @@ export default {
 }
 
 /* 文章信息span */
-.label-box span{
-    margin: 0 3px;
-    &:first-child{
-        margin-left: 0;
-    }
+.label-box span {
+  margin: 0 3px;
+  &:first-child {
+    margin-left: 0;
+  }
 }
 /* 图片的样式, 矩形黄金比例：0.618 */
 .thumb {

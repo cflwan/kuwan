@@ -83,3 +83,12 @@ export const getReportApi = ({ autId, type }) => {
     }
   })
 }
+// 获取搜索联想建议
+export const suggestDataApi = ({ keywords }) => {
+  return test({
+    url: '/v1_0/suggestion',
+    params: {
+      q: keywords
+    }
+  })
+}

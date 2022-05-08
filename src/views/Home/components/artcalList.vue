@@ -13,8 +13,7 @@
       offset="50"
 
 >
-
-   <artcalItem v-for="t in list" :key="t.art_id" :tobj="t" @dislikeEv="fndislike" @reportApi ="fnreport"></artcalItem>
+<artcalItem v-for="t in list" :key="t.art_id" :tobj="t" @dislikeEv="fndislike" @reportApi ="fnreport"></artcalItem>
    <!-- //t 应该是一个对象 -->
     </van-list>
     </van-pull-refresh>
@@ -51,6 +50,7 @@ export default {
   mounted () {},
   computed: {},
   methods: {
+    // 下拉刷新
     async onLoad () {
       if (this.list.length === 0) {
         return // 如果页面没有数据，没有高度，让本次onLoad逻辑代码不往下执行
@@ -64,7 +64,7 @@ export default {
       this.theTime = res2.data.data.pre_timestamp // pre_timestamp 是第一发给服务器的时间戳然后返回给我们的山戳
       this.loading = false // 加载状态一定要关闭，不然底部依然是加载状态，下次触底会再次出发onload
     },
-    // 下拉刷新
+    // 上拉刷新
     async onRefresh () {
       this.list = []
       this.theTime = (new Date()).getTime()
@@ -82,6 +82,7 @@ export default {
       await articelDislike({ artId: id })
       Notify({ type: 'success', message: '反馈内容成功' })
     },
+    // 点击二级面板的举报
     async fnreport (id, type) {
       await getReportApi({
         autId: id,

@@ -12,7 +12,7 @@
         </template>
         <template v-slot:right>
           <!-- 坑： postcss只能style里css样式代码，标签内行内样式它无法px 转rem 需手动-->
-          <van-icon color="#fff" name="search" size="0.48rem" />
+          <van-icon color="#fff" name="search" size="0.48rem" @click="changeSearch"/>
         </template>
       </van-nav-bar>
       <!-- 导航部分 -->
@@ -36,6 +36,7 @@
             :key="item.id"
             :title="item.name"
           >
+            <!-- 这里是标签下的内容 -->
             <!-- {{item.name}}  这里面的内容太多了，我们可以自己封装组件引入到这里-->
             <artcalList :channelId="channelId"></artcalList>
           </van-tab>
@@ -57,6 +58,7 @@
             @removeChannnelEv="removeChannnelData"
             v-model="channelId"
           >
+            <!-- :userTab :uncheckData 要传入子组件进行数据铺设 -->
           </channel-edit>
         </van-popup>
       </div>
@@ -65,7 +67,12 @@
 </template>
 <script>
 // 导入userChannelsApi函数： 和所用频道标签allItem ：重置频道，从多余的频道添加到用户的频道
-import { userChannelsApi, allItem, putUserChannelApi, removeChannelApi } from '@/api/index.js'
+import {
+  userChannelsApi,
+  allItem,
+  putUserChannelApi,
+  removeChannelApi
+} from '@/api/index.js'
 // 导入文章整个列表artcalList
 import artcalList from './components/artcalList.vue'
 // 导入channelEdit组件
@@ -84,13 +91,15 @@ export default {
       userChannelsData: [], // 部分用户选择标签，都是数组
       // getartcal: []
       show: false,
-      allItem: [] // 获取所有用户频道的标签，都是数组
+      allItem: [] // 获取所有用户频道的标签，都是数组，应该从接口中取出，所有弹出层里的频道列表
     }
   },
   async created () {
+    // userChannelsApi 用户已选部分的频道数据
     const res = await userChannelsApi()
     console.log(res)
     this.userChannelsData = res.data.data.channels
+    // 下面的三行代码是获取所用频道的数据allItem
     const res2 = await allItem()
     this.allItem = res2.data.data.channels
     console.log(res2)
@@ -115,15 +124,18 @@ export default {
       //   this.getartcal = res2.data.data.results
       // }
     },
+    // 显示弹出层
     showPopup () {
       this.show = true
     },
+    // 弹出层里面的加号 -----关闭弹出层
     closePopup () {
       this.show = false
     },
     // 添加频道
-    async  addChannelfn (item2) {
-      this.userChannelsData.push(item2)
+    async addChannelfn (item2) {
+      this.userChannelsData.push(item2) // 这语句虽然把多余频道增加到已选择频道里，但是后台服务器里没有，因此刷新又回到原来的样子
+
       // 还好把最新的数组发送给后台
       // 数组里对象字段-》转换
       // 推荐频道不能传递-筛选出不是推荐剩下的频道对象
@@ -156,7 +168,7 @@ export default {
     },
     // 删除指定频道
     async removeChannnelData (item) {
-      const index = this.userChannelsData.findIndex(obj => {
+      const index = this.userChannelsData.findIndex((obj) => {
         return obj.id === item.id
       })
       this.userChannelsData.splice(index, 1)
@@ -167,8 +179,13 @@ export default {
         channelId: item.id
       })
       console.log(res4)
+    },
+    // 点击首页搜索图标，进行页面跳转
+    changeSearch () {
+      this.$router.push({ path: '/search' })
     }
   },
+  // 为什么要用计算属性--》注意: 你有计算属性, 所以引用变量改变, 未选频道自动重新计算  【这句话很重要】
   computed: {
     unCheckChannelList () {
       const newArr = this.allItem.filter((bigObj) => {
