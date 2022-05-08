@@ -11,17 +11,20 @@
       finished-text="没有更多了"
       @load="onLoad"
       offset="50"
+
 >
 
-   <artcalItem v-for="t in list" :key="t.art_id" :tobj="t"></artcalItem>
+   <artcalItem v-for="t in list" :key="t.art_id" :tobj="t" @dislikeEv="fndislike" @reportApi ="fnreport"></artcalItem>
    <!-- //t 应该是一个对象 -->
     </van-list>
     </van-pull-refresh>
 </div>
 </template>
 <script>
-import { getallartcalListApi } from '@/api/index'
+import { getallartcalListApi, articelDislike, getReportApi } from '@/api/index'
 import artcalItem from './artcalItem.vue'
+import { Notify } from 'vant'
+
 // 问题1:网页刚打开，created里请求和onload李请求同时发送，请求的都是最新数据
 // onload中，2次数据的合并，数据重复了，key 重复了
 // 原因：van-list组件，数组挂载时，默认就会判定一次是否触底  ，（我的理解：开始渲染页面时，盒子高度是0，就触底了）
@@ -41,7 +44,8 @@ export default {
       loading: false,
       finished: false,
       theTime: (new Date()).getTime(),
-      isLoading: false
+      isLoading: false,
+      Notify
     }
   },
   mounted () {},
@@ -72,7 +76,20 @@ export default {
       this.list = [...this.list, ...res2.data.data.results] // 数组的拼接
       this.theTime = res2.data.data.pre_timestamp // pre_timestamp 是第一发给服务器的时间戳然后返回给我们的时间戳
       this.isLoading = false // 表示刷新成功
+    },
+    // 点击不感兴趣 反馈的信息
+    async fndislike (id) {
+      await articelDislike({ artId: id })
+      Notify({ type: 'success', message: '反馈内容成功' })
+    },
+    async fnreport (id, type) {
+      await getReportApi({
+        autId: id,
+        type: type
+      })
+      Notify({ type: 'success', message: '举报成功' })
     }
+
   },
   async created () {
     const res2 = await getallartcalListApi({
