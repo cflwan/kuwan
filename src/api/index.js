@@ -92,3 +92,56 @@ export const suggestDataApi = ({ keywords }) => {
     }
   })
 }
+// 获取搜索结果
+export const getSearchApi = ({ page = 1, per_page = 10, q }) => {
+  return test({
+    url: '/v1_0/search',
+    params: {
+      page,
+      per_page,
+      q
+    }
+  })
+}
+// 获取新闻详情页
+export const detailApi = ({ art_id }) => {
+  return test({
+    url: `/v1_0/articles/${art_id}`
+  })
+}
+
+// 文章详情->点击已关注即调用取消关注接口
+export const unfollowApi = ({ autId }) => {
+  return test({
+    url: `/v1_0/user/followings/${autId}`,
+    method: 'DELETE'
+  })
+}
+
+// 文章详情--》点击关注-》已关注显示-》调用关注接口
+export const followApi = ({ autId }) => {
+  return test({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target: autId
+    }
+  })
+}
+// 文章详情----》取消对文章点赞接口
+export const unlikeApi = ({ autId }) => {
+  return test({
+    url: `/v1_0/article/likings/${autId}`,
+    method: 'DELETE'
+  })
+}
+// 文章详情---》对文章点赞接口
+export const likeAPi = ({ autId }) => {
+  return test({
+    url: '/v1_0/article/likings',
+    method: 'POST',
+    data: {
+      target: autId
+    }
+  })
+}

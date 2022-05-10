@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 import 'amfe-flexible' // 设置根标签 字体大小
 // 全局注册导航组件
-import { NavBar, Form, Field, Button, Tabbar, TabbarItem, Icon, Tab, Tabs, Cell, List, PullRefresh, ActionSheet, Notify, Popup, Col, Badge, Row, Search } from 'vant'
+import { NavBar, Form, Field, Button, Tabbar, TabbarItem, Icon, Tab, Tabs, Cell, List, PullRefresh, ActionSheet, Notify, Popup, Col, Badge, Row, Search, divider } from 'vant'
+Vue.use(divider)
 Vue.use(Search)
 Vue.use(Col)
 Vue.use(Row)

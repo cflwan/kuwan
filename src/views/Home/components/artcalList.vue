@@ -4,24 +4,30 @@
     <!-- offset前面不加v-bind 是因为50是一个值，不是表达式 ；值的话不加v-bind -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <!-- //van-pull-refresh 下拉刷新 -->
-    <van-list
-      :immediate-check='false'
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-      offset="50"
-
->
-<artcalItem v-for="t in list" :key="t.art_id" :tobj="t" @dislikeEv="fndislike" @reportApi ="fnreport"></artcalItem>
-   <!-- //t 应该是一个对象 -->
-    </van-list>
+      <van-list
+        :immediate-check="false"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+        offset="50"
+      >
+        <artcalItem
+          v-for="t in list"
+          :key="t.art_id"
+          :tobj="t"
+          @dislikeEv="fndislike"
+          @reportApi="fnreport"
+          @click.native="detailChg(t.art_id)"
+        ></artcalItem>
+        <!-- //t 应该是一个对象 -->
+      </van-list>
     </van-pull-refresh>
-</div>
+  </div>
 </template>
 <script>
 import { getallartcalListApi, articelDislike, getReportApi } from '@/api/index'
-import artcalItem from './artcalItem.vue'
+import artcalItem from '@/components/artcalItem.vue'
 import { Notify } from 'vant'
 
 // 问题1:网页刚打开，created里请求和onload李请求同时发送，请求的都是最新数据
@@ -34,7 +40,6 @@ export default {
   props: {
     // list: Array // 文章列表数组
     channelId: Number // 频道ID
-
   },
   components: { artcalItem },
   data () {
@@ -42,7 +47,7 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      theTime: (new Date()).getTime(),
+      theTime: new Date().getTime(),
       isLoading: false,
       Notify
     }
@@ -67,7 +72,7 @@ export default {
     // 上拉刷新
     async onRefresh () {
       this.list = []
-      this.theTime = (new Date()).getTime()
+      this.theTime = new Date().getTime()
       const res2 = await getallartcalListApi({
         channel_id: this.channelId,
         timestamp: this.theTime
@@ -89,8 +94,10 @@ export default {
         type: type
       })
       Notify({ type: 'success', message: '举报成功' })
+    },
+    detailChg (id) {
+      this.$router.push({ path: `/detail?art_id=${id}` })
     }
-
   },
   async created () {
     const res2 = await getallartcalListApi({
@@ -109,7 +116,6 @@ export default {
       this.finished = true // 本次返回来的数据是最后，没有下一页数据了
     }
   }
-
 }
 </script>
 <style scoped>

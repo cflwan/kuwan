@@ -18,32 +18,64 @@
         shape="round"
         v-model.trim="kw"
         @input="inputFn"
+        @search="searchFn"
+
       />
       <!--  vant自定义事件 @input="inputFn"  input输入框内容变化时触发 -->
-
     </div>
     <!-- 搜索建议列表 -->
-      <div class="sugg-list">
-        <div
-          class="sugg-item"
-          v-for="(sugg,index) in suggestListItem"
-          :key="index"  v-html="chgColor(sugg,kw)"
-        >
-          <!-- {{ chgColor(sugg,kw)}} -->
-        </div>
+    <!-- v-if="kw.length !==0" 如果搜索框里有关键字就显示搜索建议列表，没有关键字的话就显示搜索历史列表 -->
+    <div class="sugg-list"  v-if="kw.length !==0">
+      <div
+        class="sugg-item"
 
+        v-for="(sugg, index) in suggestListItem"
+        :key="index"
+        v-html="chgColor(sugg, kw)"
+        @click="suggestFn(sugg)"
+      >
+        <!-- {{ chgColor(sugg,kw)}} -->
       </div>
+    </div>
+    <!-- 搜索历史 -->
+    <div class="search-history"  v-else>
+      <!-- 标题 -->
+      <van-cell title="搜索历史">
+        <!-- 使用 right-icon 插槽来自定义右侧图标 -->
+        <template #right-icon>
+          <van-icon name="delete" class="search-icon"  @click="clearFn"/>
+          <!-- @click="clearFn" 清空历史记录 -->
+        </template>
+      </van-cell>
+
+      <!-- 历史列表 -->
+      <div class="history-list" >
+        <span
+
+          class="history-item"
+          v-for="(historydata, index) in history"
+          :key="index"
+          @click="historyFn(historydata)"
+          >{{ historydata }}</span
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { suggestDataApi } from '@/api/index'
+
+// 1 输入搜索内容，确定时----》搜索结果页
+// 2 点击搜索历史记录时-----》确定结果页
+// 3 点击联想内容时------》转到搜索页面
 export default {
   data () {
     return {
       kw: '', // 搜索关键字
       timer: null, // 设置定时器为空
-      suggestListItem: []
+      suggestListItem: [],
+      history: JSON.parse(localStorage.getItem('his')) || []// 搜索历史
     }
   },
   methods: {
@@ -73,11 +105,55 @@ export default {
         */
       const reg = new RegExp(keyData, 'ig')
       //   如果你要使用变量，作为正则的匹配条件，不能用语法糖简化写法
-      return orgData.replaceAll(reg, (match) => {
+      return orgData.replace(reg, (match) => {
         return `<span style="color:red;">${match}</span>`
       })
+    },
+    // 输入搜索框并且确认时，跳转搜索页,并且传参
+    searchFn () {
+      if (this.kw.length !== 0) {
+        this.history.push(this.kw) // 把输入文字保存到history数组里
+        setTimeout(() => {
+          this.$router.push({ path: `/search_result/${this.kw}` })
+        }, 0)
+      }
+    },
+    // 搜索建议，点击搜索建议---》跳转到结果页并且传参
+    suggestFn (sugg) {
+      if (this.kw.length !== 0) {
+        this.history.push(sugg)// 把搜索建议保存到history数组里
+        setTimeout(() => { // 这里和下面加定时器的原因:但是发现跳转后, 并未保存到本地(【watch是异步的】原因: 先跳转了, watch还未来的及执行==)给路由跳转加个定时器(最后执行
+          this.$router.push({ path: `/search_result/${sugg}` })
+        }, 0)
+      }
+    },
+    // 点击搜索历史记录----》跳转到结果页并且传参
+    historyFn (historydata) {
+      this.$router.push({ path: `/search_result/${historydata}` })
+    },
+    // 点击删除按钮，清空历史记录
+    clearFn () {
+      this.history = []
     }
+  },
+  // 侦听器的使用 侦听上面保存history数组的变化，并保存
+  watch: {
+    history: {
+      deep: true,
+      handler () {
+        // ES6新增了2种引用类型（以前Array，Object） 新增（Set Map）
+        /*
+        Set：无序的不允许重复的value集合体（无下角标）
+        特点：你传入的数组类型，如果有重复元素，会自动清理掉重复的元素，返回无重复的Set对象
+        注意：如果值是对象比较的是对象的内存地址
+        */
+        const theSet = new Set(this.history)
+        //  Set类型对象-》转回 -》Array数组类型
+        const arr = Array.from(theSet)
+        localStorage.setItem('his', JSON.stringify(arr))
+      }
 
+    }
   }
 }
 </script>
@@ -109,6 +185,23 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+/**搜索历史 */
+.search-icon {
+  font-size: 16px;
+  line-height: inherit;
+}
+// 搜索历史
+.history-list {
+  padding: 0 10px;
+  .history-item {
+    display: inline-block;
+    font-size: 12px;
+    padding: 8px 14px;
+    background-color: #efefef;
+    margin: 10px 8px 0px 8px;
+    border-radius: 10px;
   }
 }
 </style>

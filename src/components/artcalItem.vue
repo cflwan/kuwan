@@ -34,7 +34,7 @@
         </div>
         <!-- 反馈按钮 -->
         <!-- @click="show = true 绑定点击事件，给show赋值true，然后反馈组件显示 -->
-        <van-icon name="cross" @click="show = true" />
+        <van-icon name="cross" @click.stop="show = true" v-if="iShow" />
       </div>
       <!-- 下面是反馈组件   get-container="body" 把反馈组件遮罩挂载到body标签上，
       因为每个ceil里有 overflow：hidden反馈里有cancel-text="取消"-->
@@ -64,7 +64,11 @@ export default {
     }
   },
   props: {
-    tobj: Object
+    tobj: Object,
+    iShow: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
     formatTime: timeAgo, // timeAgo是一个方法,插件封装在utils
@@ -101,6 +105,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped lang="less">
