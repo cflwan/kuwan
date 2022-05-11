@@ -46,7 +46,7 @@ export default {
     return {
       user: {
       //  这两个名字要到接口文档里去查看 code 验证码
-        mobile: '',
+        mobile: '13888888888',
         code: '246810'
       },
       isflag: false // 登录加载状态先屏蔽掉，登录的时候在显示

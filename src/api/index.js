@@ -145,3 +145,90 @@ export const likeAPi = ({ autId }) => {
     }
   })
 }
+// 文章详情下的评论---》获取评论接口
+export const commentDateAPi = ({ id, offset = null, limit = 10 }) => {
+  return test({
+    url: '/v1_0/comments',
+    method: 'GET',
+    params: {
+      type: 'a',
+      source: id,
+      offset,
+      limit
+    }
+  })
+}
+
+// 点击小红心，就是不喜欢，----》对文章不喜欢接口
+export const dislikeDataApi = ({ artId }) => {
+  return test({
+    url: `/v1_0/comment/likings/${artId}`,
+    method: 'DELETE'
+
+  })
+}
+
+// 点击小灰心，就是喜欢----》调用喜欢接口
+export const likeDataApi = ({ artId }) => {
+  return test({
+    url: '/v1_0/comment/likings',
+    method: 'POST',
+    data: {
+      target: artId
+    }
+  })
+}
+// 对文章进行评论--->发布评论
+export const toCmtDataApi = ({ artId, content, art_id = null }) => {
+  const obj = {
+    target: artId,
+    content
+  }
+  if (art_id != null) {
+    obj.art_id = art_id
+  }
+  return test({
+    // 1.axios中，data请求体传参，如果值为null是不会忽略这个参数的
+    // 也会把参数名和值携带给后天（只有params遇到Null才会忽略）
+    /*
+      2.形参art_id可选参数，如果逻辑页面是对文章评论，则不需要传递art_id
+      所以这时，内部art_id值为null就证明此次调用，是针对文章评论
+      data请求体对象需要自己处理
+
+    */
+    url: '/v1_0/comments',
+    method: 'POST',
+    data: obj
+  })
+}
+// 个人中心--》获取用户自己的信息就是用户页面，有粉丝，有动态的那个
+export const getUserMsgApi = () => {
+  return test({
+    url: '/v1_0/user'
+  })
+}
+// 个人中心--》获取用户的个人的资料（在个人中心里的编辑资料里）
+export const getProfileMsgApi = () => {
+  return test({
+    url: '/v1_0/user/profile'
+  })
+}
+// 用户---更新头像
+export const updataUserPhotoApi = (fd) => {
+  return test({
+    url: '/v1_0/user/photo',
+    method: 'PATCH',
+    data: fd // fd外面一会儿传进来的new FormDate()表单对象
+
+  })
+}
+/*
+上面接口概述：
+如果你的请求题直接是FormDate表单对象，你也不用自己添加
+Content_type ,axios发现数据请求题是表单对象，它也不会转换成json字符串
+也不代表Content—Type:application/json ,而是交给浏览器，浏览器发现请求体是formData自己会携带Content-Type
+
+Content-Type :aplication/json ;axios 携带的，前提：data请求体是对象-》json字符串-》发给后天
+Content_Type:multipart/form-data;浏览器携带的，前提：data请求体必须是FormDate类型对象
+
+*/

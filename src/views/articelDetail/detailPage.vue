@@ -59,13 +59,22 @@
         >
       </div>
     </div>
+    <!-- 文章评论区域 -->
+     <comment-list></comment-list>
+
   </div>
 </template>
 
 <script>
 import { detailApi, unfollowApi, followApi, unlikeApi, likeAPi } from '@/api/index'
 import { timeAgo } from '@/utils/date'
+// 导入评论页组件
+
+import CommentList from './commentList.vue'
 export default {
+  components: {
+    CommentList
+  },
   data () {
     return {
       detailList: {}

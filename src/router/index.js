@@ -7,6 +7,7 @@ import User from '@/views/User/userPage'
 import Search from '@/views/Search/searchPage'
 import searchResult from '@/views/Search/searchResult'
 import articelDetail from '@/views/articelDetail/detailPage'
+import UserEdit from '@/views/User/userEdit'
 Vue.use(VueRouter)
 const routes = [
   {
@@ -45,6 +46,12 @@ const routes = [
   {
     path: '/detail',
     component: articelDetail
+  },
+  // 个人中心里----》获取用户个人资料路由
+  {
+    path: '/useredit',
+    component: UserEdit
+
   }
 
 ]
