@@ -232,3 +232,30 @@ Content-Type :aplication/json ;axios 携带的，前提：data请求体是对象
 Content_Type:multipart/form-data;浏览器携带的，前提：data请求体必须是FormDate类型对象
 
 */
+
+// 编辑用户的个人资料 （名称的修改）
+
+export const updataUserProfileApi = (dataObj) => {
+// 判断，有值才能参数名给后台，无值参数名不携带
+// 写法一：解构赋值，4个判断，往空对象上添加有值的加上去（以前做过）
+// 写法二：外面想传几个对象key+value ，就直接交给后台
+// 写法三:上面写法不够语义化,我看不出obj里有什么
+  const obj = {
+    name: '',
+    gender: 0,
+    birthday: '',
+    intro: ''
+  }
+  for (const prop in obj) {
+    if (dataObj[prop] === undefined) {
+      delete obj[prop]
+    } else {
+      obj[prop] = dataObj[prop]
+    }
+  }
+  return test({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data: obj
+  })
+}

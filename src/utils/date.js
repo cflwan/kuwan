@@ -15,3 +15,8 @@ export const timeAgo = (targetTime) => {
   const b = dayjs(targetTime)
   return a.to(b) // 返回多久之前...
 }
+
+// 格式化日期 ---》下面的意思是把对象格式化('YYY-MM-DD')样式
+export const formatDate = (dataObj) => {
+  return dayjs(dataObj).format('YYYY-MM-DD')
+}

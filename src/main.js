@@ -4,7 +4,9 @@ import router from './router'
 import store from './store'
 import 'amfe-flexible' // 设置根标签 字体大小
 // 全局注册导航组件
-import { NavBar, Form, Field, Button, Tabbar, TabbarItem, Icon, Tab, Tabs, Cell, List, PullRefresh, ActionSheet, Notify, Popup, Col, Badge, Row, Search, divider, tag, cellGroup, Image as VanImage } from 'vant'
+import { NavBar, Form, Field, Button, Tabbar, TabbarItem, Icon, Tab, Tabs, Cell, List, PullRefresh, ActionSheet, Notify, Popup, Col, Badge, Row, Search, divider, tag, cellGroup, Image as VanImage, Dialog, DatetimePicker } from 'vant'
+Vue.use(DatetimePicker)
+Vue.use(Dialog)
 Vue.use(VanImage)
 Vue.use(tag)
 Vue.use(cellGroup)
@@ -36,6 +38,7 @@ const directiveObj = {
   install (Vue) {
     Vue.directive('fofo', {
       // el代表指令所在标签
+      // 指令所在标签，被插入到真实DOM时才触发，如果标签用display:none隐藏再出现，不会触发inserted
       inserted (el) {
         // 指令所在Van-search组件
         // 组件跟标签是div，input在内部
@@ -44,6 +47,18 @@ const directiveObj = {
         // 文章评论 el是textarea
         // 以后el还可能是input 呢？
         // 知识点：原生DOM.nodeName 拿到标签名字（注意：大写的字符串）
+        if (el.nodeName === 'TEXTAREA' || el.nodeName === 'INPUT') {
+          el.focus()
+        } else {
+          // el本身不是输入框，尝试往里获取一下
+          const theInput = el.querySelector('input')
+          const theTextArea = el.querySelector('textarea')
+          // 判断：不一定能获取得到，需要加判断，有值了，在执行.focus()才不报错
+          if (theInput) theInput.focus()
+          if (theTextArea) theTextArea.focus()
+        }
+      },
+      update (el) { // 指令所在标签，被更新时触发
         if (el.nodeName === 'TEXTAREA' || el.nodeName === 'INPUT') {
           el.focus()
         } else {
