@@ -28,7 +28,7 @@
 <script>
 import { getallartcalListApi, articelDislike, getReportApi } from '@/api/index'
 import artcalItem from '@/components/artcalItem.vue'
-import { Notify } from 'vant'
+import Notify from '@/ui/Notify'
 
 // 问题1:网页刚打开，created里请求和onload李请求同时发送，请求的都是最新数据
 // onload中，2次数据的合并，数据重复了，key 重复了
@@ -36,6 +36,7 @@ import { Notify } from 'vant'
 // 第一页数据也是网络请求回来的，标签先挂载了，数据回来更新DOM，所以标签没有高度，list的onload事件上来就触发
 // 解决方案一：查Vant文档，在list那栏，，list组件添加 :immediate-check='false' 默认是true 就是检查触不触底
 // 解决方案二：在onLoad第一行，写数组长度的判断
+
 export default {
   props: {
     // list: Array // 文章列表数组
@@ -48,8 +49,8 @@ export default {
       loading: false,
       finished: false,
       theTime: new Date().getTime(),
-      isLoading: false,
-      Notify
+      isLoading: false
+
     }
   },
   mounted () {},

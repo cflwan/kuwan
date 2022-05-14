@@ -5,7 +5,7 @@ const key = 'geek-itheima'
 // key 就是数据的标识符即名字
 // 设置
 export const setToken = (token) => {
-  localStorage.setItem(key, token)
+  return localStorage.setItem(key, token)
   // loaclstorage  获得的token值赋值给key标识符
 }
 // 获取

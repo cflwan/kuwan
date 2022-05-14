@@ -201,7 +201,31 @@ export default {
       })
       return newArr
     } // 上面这一块代码很重要 视频P66复习能看
+  },
+  // 前提：组件缓存，切走了就是失去激活生命周期方法触发
+  //  无组件缓存，被切走了，destroyed销毁生命周期方法
+  // 每个页面都有自己独立的，路由规则对象
+  /*
+     首页——》滚动位置保存
+     问题：首页滚动一些，点击我的再切回来为何，滚动条回到了顶部？
+     疑惑：组件缓存 keep-alive 保存组件标签+样式+变量，不会保存滚动位置
+     原因：切换到我的页面，页面高度不够高，没有滚动条
+     滚动位置会回到顶部，所以切换回首页，只是内容改变了，滚动条还在顶部
+     解决：首页失去焦点（被切走的时候），在它的路由对象meta中保存滚动位置
+  */
+  activated () {
+    console.log(this.$route)
+    window.addEventListener('scroll', () => {
+      this.$route.meta.scrollT = document.documentElement.scrollTop
+    })
+    document.documentElement.scrollTop = this.$route.meta.scrollT
+  },
+  deactivated () {
+    window.removeEventListener('scroll', () => {
+      this.$route.meta.scrollT = document.documentElement.scrollTop
+    })
   }
+
 }
 </script>
 <style scoped lang="less">

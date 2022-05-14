@@ -1,8 +1,9 @@
 import router from '@/router'
+// import {removeToken} from '@/utils/token'
 // 封装axios
 import theAxios from 'axios'
-import { Notify } from 'vant'
-import { getToken } from './token'
+import Notify from '@/ui/Notify'
+import { getToken, removeToken } from './token'
 const axios = theAxios.create({
   baseURL: 'http://geek.itheima.net',
   timeout: 20000
@@ -37,6 +38,7 @@ axios.interceptors.response.use(function (response) {
   console.dir(error)
   if (error.response.status === 401) {
     Notify({ type: 'warning', message: '身份已过期' })
+    removeToken()
     router.replace('/login')
   }
   // 不能使用this.$router(因为this不是Vue组件对象无法调用$router)

@@ -15,9 +15,11 @@
           <van-image
             round
             class="avatar"
-            :src="userprofileList.photo"
+           :src="userprofileList.photo"
+
             @click="getImgClick"
           />
+          <!-- : -->
           <!-- 下面是上传文件输入框 -->
           <input
             type="file"
@@ -75,7 +77,7 @@ import {
   updataUserPhotoApi,
   updataUserProfileApi
 } from '@/api/index'
-import { Notify } from 'vant'
+import Notify from '@/ui/Notify'
 import { formatDate } from '@/utils/date'
 export default {
   name: 'UserEdit',
@@ -94,6 +96,7 @@ export default {
   async created () {
     const res = await getProfileMsgApi()
     this.userprofileList = res.data.data
+    this.$store.commit('SET_USERPHOTO', this.userprofileList.photo)
   },
   methods: {
     //   给change事件【该事件在输入框的值发生变动时触发】绑定方法

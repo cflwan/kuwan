@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-   <router-view></router-view>
+    <!-- 可以设置不要缓存的组件 -->
+    <keep-alive exclude="searchPage,SearchResult,detailPage,UserEdit,loginPage">
+      <router-view></router-view>
+    </keep-alive>
+
   </div>
 </template>
 <script>

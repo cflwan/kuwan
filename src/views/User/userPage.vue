@@ -6,7 +6,7 @@
       <van-cell>
         <!-- 使用 title 插槽来自定义标题 -->
         <template #icon>
-          <img :src="ownUserList.photo" alt="#" class="avatar" />
+          <img :src="$store.state.userphoto" alt="#" class="avatar" />
         </template>
         <template #title>
           <span class="username">{{ ownUserList.name }}</span>
@@ -35,7 +35,7 @@
     <!-- 操作面板 -->
     <van-cell-group class="action-card">
       <van-cell icon="edit" title="编辑资料" is-link  to="/useredit"/>
-      <van-cell icon="chat-o" title="小思同学" is-link />
+      <van-cell icon="chat-o" title="小思同学" is-link to="/chat"/>
       <van-cell icon="warning-o" title="退出登录" is-link @click="logoutFn" />
     </van-cell-group>
   </div>
@@ -55,6 +55,7 @@ export default {
   async created () {
     const res = await getUserMsgApi()
     this.ownUserList = res.data.data
+    this.$store.commit('SET_USERPHOTO', this.ownUserList.photo)
   },
   methods: {
     // 退出登录事件

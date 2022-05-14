@@ -7,8 +7,12 @@
       left-arrow
       @click-left="$router.back()"
     />
-
-    <!-- 文章信息区域 -->
+   <!-- 文章详情加载状态 -->
+    <van-loading type="spinner" color="#1989fa" v-if="detailList.title===undefined" >
+      加载中...
+    </van-loading>
+ <div v-else>
+      <!-- 文章信息区域 -->
     <div class="article-container">
       <!-- 文章标题 -->
       <h1 class="art-title">{{ detailList.title }}</h1>
@@ -61,6 +65,7 @@
     </div>
     <!-- 文章评论区域 -->
      <comment-list></comment-list>
+ </div>
 
   </div>
 </template>
@@ -72,6 +77,7 @@ import { timeAgo } from '@/utils/date'
 
 import CommentList from './commentList.vue'
 export default {
+  name: 'detailPage',
   components: {
     CommentList
   },
@@ -180,5 +186,10 @@ export default {
 }
 /deep/ .van-nav-bar .van-icon {
   color: #fff;
+}
+// 文章详情加载时出现加载状态
+.van-loading{
+  text-align: center;
+  padding-top: 46px;
 }
 </style>

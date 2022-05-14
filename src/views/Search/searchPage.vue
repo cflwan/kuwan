@@ -65,17 +65,18 @@
 
 <script>
 import { suggestDataApi } from '@/api/index'
-
+import { getStorage, setStorage } from '@/utils/storage'
 // 1 输入搜索内容，确定时----》搜索结果页
 // 2 点击搜索历史记录时-----》确定结果页
 // 3 点击联想内容时------》转到搜索页面
 export default {
+  name: 'searchPage',
   data () {
     return {
       kw: '', // 搜索关键字
       timer: null, // 设置定时器为空
       suggestListItem: [],
-      history: JSON.parse(localStorage.getItem('his')) || []// 搜索历史
+      history: JSON.parse(getStorage('his')) || []// 搜索历史
     }
   },
   methods: {
@@ -150,7 +151,7 @@ export default {
         const theSet = new Set(this.history)
         //  Set类型对象-》转回 -》Array数组类型
         const arr = Array.from(theSet)
-        localStorage.setItem('his', JSON.stringify(arr))
+        setStorage('his', JSON.stringify(arr))
       }
 
     }

@@ -40,8 +40,9 @@
 <script>
 import { loginApi } from '@/api/index'
 import { setToken } from '@/utils/token.js'
-import { Notify } from 'vant'
+import Notify from '@/ui/Notify'
 export default {
+  name: 'loginPage',
   data () {
     return {
       user: {
@@ -70,12 +71,13 @@ export default {
         console.log(res)
         Notify({ type: 'success', message: '登录成功' })
         // 登录成功要保存Token
-        setToken(res.data.data.token)
+
         // 登录之后页面跳转路由界面
         // this.$router.push({ path: ' ' })  此语句跳转后有历史记录，可以回退，登录后回退不合理
         this.$router.replace({ path: '/Layout/Home' }) // 替换 （不会产生历史记录）
         // 因为我们路由/layout里面没有重定向，所以可以直接写全 {path:'/Layout/Home'}
         // 也可以跳到根路由，它有重定向
+        setToken(res.data.data.token)
       } catch (err) {
         // console.log(err)
         Notify({ type: 'danger', message: '账号或密码错误' })

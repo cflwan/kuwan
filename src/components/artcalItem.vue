@@ -7,22 +7,27 @@
         <!-- 标题 -->
         <span>{{ tobj.title }}</span>
         <!-- 单图图片放置 -->
+
         <img
           class="thumb"
           v-if="tobj.cover.type === 1"
-          :src="tobj.cover.images[0]"
+
+          v-lazy='tobj.cover.images[0]'
         />
       </div>
+      <!-- :src="tobj.cover.images[0]"  v-lazy:懒加载图片 v-lazy='tobj.cover.images[0]'-->
       <!-- 三图  判断大于一比较严谨-->
       <div class="thumb-box" v-if="tobj.cover.type > 1">
         <img
           class="thumb"
           v-for="(imgUrl, index) in tobj.cover.images"
           :key="index"
-          :src="imgUrl"
+
+          v-lazy="imgUrl"
           alt="#"
         />
       </div>
+      <!-- v-lazy="imgUrl" //图片懒加载  :src="imgUrl"-->
     </template>
     <!-- label 区域的插槽 -->
     <template #label>

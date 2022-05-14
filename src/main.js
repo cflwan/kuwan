@@ -2,35 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
 import 'amfe-flexible' // 设置根标签 字体大小
-// 全局注册导航组件
-import { NavBar, Form, Field, Button, Tabbar, TabbarItem, Icon, Tab, Tabs, Cell, List, PullRefresh, ActionSheet, Notify, Popup, Col, Badge, Row, Search, divider, tag, cellGroup, Image as VanImage, Dialog, DatetimePicker } from 'vant'
-Vue.use(DatetimePicker)
-Vue.use(Dialog)
-Vue.use(VanImage)
-Vue.use(tag)
-Vue.use(cellGroup)
-Vue.use(divider)
-Vue.use(Search)
-Vue.use(Col)
-Vue.use(Row)
-Vue.use(Badge)
-Vue.use(Popup)
-Vue.use(Notify)
-Vue.use(ActionSheet)
-Vue.use(PullRefresh)
-Vue.use(List)
-Vue.use(Cell)
-Vue.use(Tab)
-Vue.use(Tabs)
-Vue.use(Icon)
-Vue.use(Button)
-Vue.use(Form)
-Vue.use(Field)
-Vue.use(NavBar)
-Vue.use(Tabbar)
-Vue.use(TabbarItem)
-
+import './vueComponent' // vant 组件注册，单独的分离成一个js 文件，让main.js更清晰
 Vue.config.productionTip = false
 
 // 封装中间件函数插件
@@ -73,6 +47,24 @@ const directiveObj = {
     })
   }
 }
+
+// webpack开发服务器--》做代理转发
+/*
+原因：前端->后端接口跨域问题，但是后端几部支持jsonp也不开启cors,前端无法直接请求
+解决：跨域解决方案第三种，用代理服务
+使用：还好webpack开发服务器，默认就支持代理转发的功能；但是需要你配置代理转发的地址
+（1）：在vue.config.js中，设置devServer服务器配置项
+（2）axios请求，要请求本地开发服务器相对地址开头
+（3） 改完配置重启服务器
+
+*/
+// 例如直接请求，会报跨域错误
+axios({
+  url: '/api/nc/article/headline/T1348647853363/0-40.html'
+}).then((res) => {
+  console.log(res)
+})
+
 // 执行目标对象里install方法并传入Vue类
 Vue.use(directiveObj)
 new Vue({
