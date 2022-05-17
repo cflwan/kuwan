@@ -110,7 +110,7 @@ export default {
       const res2 = await updataUserPhotoApi(thefd)
       //   this.userprofileList.photo =res.
       console.log(res2)
-      this.userprofileList.photo = res2.data.data.photo
+      this.userprofileList.photo = res2.data.data.photo // 传入到后台的图片再呈现在页面上
     },
     getImgClick () {
       this.$refs.iptFile.click()

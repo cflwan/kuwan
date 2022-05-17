@@ -58,15 +58,8 @@ export default {
       list: [
         // 只根据 name 属性，即可判断出这个消息应该渲染到左侧还是右侧
         { name: 'xs', msg: 'hi，你好！我是小思' },
-        { name: 'me', msg: '我是编程小王子' },
-        { name: 'xs', msg: 'hi，你好！我是小思' },
-        { name: 'me', msg: '我是编程小王子' },
-        { name: 'xs', msg: 'hi，你好！我是小思' },
-        { name: 'me', msg: '我是编程小王子' },
-        { name: 'xs', msg: 'hi，你好！我是小思' },
-        { name: 'me', msg: '我是编程小王子' },
-        { name: 'xs', msg: 'hi，你好！我是小思' },
         { name: 'me', msg: '我是编程小王子' }
+
       ],
       socket: null
 
@@ -213,5 +206,8 @@ export default {
   width: 100%;
   background: #f5f5f5;
   z-index: 9999;
+}
+/deep/ .van-icon {
+  color:#fff
 }
 </style>
